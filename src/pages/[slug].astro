@@ -1,0 +1,83 @@
+---
+import { toHTML } from "@portabletext/to-html";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { sanityClient, urlFor } from "../lib/sanity";
+import { BLOG_POST_QUERY, BLOG_POSTS_QUERY } from "../lib/queries";
+
+interface BlogPost {
+  _id: string;
+  title: string | null;
+  slug: { current: string } | null;
+  publishedAt: string | null;
+  mainImage: unknown;
+  excerpt: string | null;
+  body: unknown[] | null;
+  cta?: { label: string; url: string } | null;
+}
+
+export async function getStaticPaths() {
+  const posts = await sanityClient.fetch<{ _id: string; slug: { current: string } | null }[]>(
+    BLOG_POSTS_QUERY,
+  );
+
+  return posts
+    .filter((post) => post.slug?.current)
+    .map((post) => ({
+      params: { slug: post.slug!.current },
+    }));
+}
+
+const { slug } = Astro.params;
+
+if (!slug) {
+  throw new Error("Missing slug param.");
+}
+
+const post = await sanityClient.fetch<BlogPost | null>(BLOG_POST_QUERY, { slug });
+
+if (!post) {
+  return Astro.redirect("/");
+}
+
+const bodyHtml = toHTML(post.body ?? [], {
+  components: {
+    types: {
+      image: ({ value }) => {
+        const src = urlFor(value).width(1200).fit("max").auto("format").url();
+        return `<img src="${src}" alt="" loading="lazy" style="margin:2rem 0;border-radius:0.75rem;" />`;
+      },
+    },
+  },
+});
+---
+
+<BaseLayout title={`${post.title ?? "Untitled"} - Map Your Video`} description={post.excerpt ?? undefined}>
+  <article class="mx-auto max-w-3xl">
+    <a href="/" class="text-sm text-zinc-500 hover:text-zinc-900">← Back to blog</a>
+    <h1 class="mt-4 text-4xl font-semibold tracking-tight">{post.title ?? "Untitled"}</h1>
+    {post.mainImage && (
+      <img
+        src={urlFor(post.mainImage as Parameters<typeof urlFor>[0]).width(1200).fit("max").auto("format").url()}
+        alt={post.title ?? "Blog cover"}
+        class="mt-6 w-full rounded-xl object-cover"
+      />
+    )}
+    {post.body && post.body.length > 0 ? (
+      <div class="prose prose-zinc mt-8 max-w-none" set:html={bodyHtml} />
+    ) : (
+      <p class="mt-8 text-zinc-700">{post.excerpt}</p>
+    )}
+    {post.cta?.label && post.cta?.url && (
+      <p class="mt-10">
+        <a
+          href={post.cta.url}
+          class="inline-flex items-center rounded-lg bg-zinc-900 px-5 py-3 text-sm font-medium text-white hover:bg-zinc-700"
+          target={post.cta.url.startsWith("http") ? "_blank" : undefined}
+          rel={post.cta.url.startsWith("http") ? "noopener noreferrer" : undefined}
+        >
+          {post.cta.label}
+        </a>
+      </p>
+    )}
+  </article>
+</BaseLayout>

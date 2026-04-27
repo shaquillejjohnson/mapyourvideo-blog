@@ -1,43 +1,41 @@
-# Astro Starter Kit: Minimal
+# Map Your Video Blog (Astro)
 
-```sh
-npm create astro@latest -- --template minimal
+Astro blog app for `mapyourvideo.com/blog`, backed by Sanity.
+
+## Environment Variables
+
+Create `.env` with:
+
+```bash
+PUBLIC_SANITY_PROJECT_ID=d38rfkes
+PUBLIC_SANITY_DATASET=production
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## Local Development
 
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+```bash
+npm install
+npm run dev
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+## Build
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+```bash
+npm run build
+```
 
-Any static assets, like images, can be placed in the `public/` directory.
+The Astro config sets `base: "/blog"` so generated routes and asset URLs are rooted at `/blog`.
 
-## 🧞 Commands
+## Netlify Deploy
 
-All commands are run from the root of the project, from a terminal:
+This project includes `netlify.toml`:
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+- Build command: `npm run build`
+- Publish directory: `dist`
+- Node version: `22`
 
-## 👀 Want to learn more?
+Also includes `public/_redirects` with `/blog -> /blog/` canonical redirect.
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+## Serving under `mapyourvideo.com/blog`
+
+The build output lives at the root of `dist/` (`dist/index.html`, `dist/<slug>/index.html`, etc.), but asset URLs use the Astro `base` path (`/blog/_astro/...`). Deploy by copying **everything inside `dist/`** into your host’s `/blog/` directory (or equivalent), so `https://mapyourvideo.com/blog/` loads `index.html` and `/blog/_astro/*` resolves.
