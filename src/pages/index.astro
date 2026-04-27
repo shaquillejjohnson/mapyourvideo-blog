@@ -1,4 +1,6 @@
 ---
+import BlogFooter from "../components/BlogFooter.astro";
+import BlogHeader from "../components/BlogHeader.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { sanityClient, urlFor } from "../lib/sanity";
 import { BLOG_POSTS_QUERY } from "../lib/queries";
@@ -10,52 +12,70 @@ interface BlogPostListItem {
   publishedAt: string | null;
   mainImage: unknown;
   excerpt: string | null;
+  authorName?: string | null;
 }
 
 const posts = await sanityClient.fetch<BlogPostListItem[]>(BLOG_POSTS_QUERY);
 ---
 
 <BaseLayout
-  title="Blog - Map Your Video"
-  description="Short posts for creators who get stuck before they film."
+  title="Blog — Map Your Video"
+  description="Short posts for creators who get stuck before they film. No fluff — just what actually helps."
 >
-  <header class="mb-10">
-    <p class="text-xs font-semibold uppercase tracking-[0.2em] text-zinc-500">The Blog</p>
-    <h1 class="mt-2 text-3xl font-semibold tracking-tight">Map Your Video</h1>
-  </header>
+  <BlogHeader />
 
-  {
-    posts.length === 0 ? (
-      <p class="text-zinc-500">No posts yet.</p>
-    ) : (
-      <ul class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {posts.map((post) => (
-          <li>
-            <a
-              href={`/${post.slug?.current ?? post._id}/`}
-              class="group block overflow-hidden rounded-xl border border-zinc-200 bg-white transition hover:border-zinc-400"
-            >
-              {post.mainImage && (
-                <img
-                  src={urlFor(post.mainImage as Parameters<typeof urlFor>[0])
-                    .width(1000)
-                    .height(600)
-                    .fit("crop")
-                    .auto("format")
-                    .url()}
-                  alt={post.title ?? "Blog post cover"}
-                  class="aspect-[4/3] w-full object-cover transition-transform group-hover:scale-[1.02]"
-                  loading="lazy"
-                />
-              )}
-              <div class="p-5">
-                <h2 class="text-lg font-semibold">{post.title ?? "Untitled"}</h2>
-                {post.excerpt && <p class="mt-2 line-clamp-3 text-sm text-zinc-600">{post.excerpt}</p>}
-              </div>
-            </a>
-          </li>
-        ))}
-      </ul>
-    )
-  }
+  <main class="mx-auto max-w-6xl px-6 py-12">
+    <h1 class="font-display text-xs uppercase tracking-widest text-muted-foreground">The Blog</h1>
+    <h2 class="mt-2 font-body text-sm text-muted-foreground">
+      For creators who have ideas but don&apos;t know what to film.
+    </h2>
+
+    {
+      posts.length === 0 ? (
+        <p class="py-12 font-body text-sm text-muted-foreground">No posts yet.</p>
+      ) : (
+        <ul class="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {posts.map((post) => (
+            <li>
+              <a
+                href={`/${post.slug?.current ?? post._id}/`}
+                class="group flex h-full flex-col overflow-hidden rounded-xl border border-border bg-card transition-colors hover:border-primary"
+              >
+                {post.mainImage && (
+                  <div class="p-4 pb-0">
+                    <div class="relative aspect-[2/3] w-full overflow-hidden rounded-lg bg-muted">
+                      <img
+                        src={urlFor(post.mainImage as Parameters<typeof urlFor>[0])
+                          .width(1000)
+                          .height(1500)
+                          .fit("crop")
+                          .auto("format")
+                          .url()}
+                        alt=""
+                        class="h-full w-full object-cover transition-transform group-hover:scale-105"
+                        loading="lazy"
+                      />
+                    </div>
+                  </div>
+                )}
+                <div class="flex flex-1 flex-col p-6 pt-4">
+                  <h3 class="font-display text-xl text-foreground group-hover:text-primary">
+                    {post.title ?? "Untitled"}
+                  </h3>
+                  {post.authorName && (
+                    <p class="mt-1 font-body text-xs text-muted-foreground">{post.authorName}</p>
+                  )}
+                  {post.excerpt && (
+                    <p class="mt-2 line-clamp-2 font-body text-sm text-muted-foreground">{post.excerpt}</p>
+                  )}
+                </div>
+              </a>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+  </main>
+
+  <BlogFooter />
 </BaseLayout>

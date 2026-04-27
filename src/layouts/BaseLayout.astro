@@ -7,6 +7,13 @@ interface Props {
 }
 
 const { title, description = "Map Your Video blog" } = Astro.props;
+const fontBase = import.meta.env.BASE_URL;
+const fontFaceCss = `
+@font-face{font-family:"PP Neue Machina Inktrap";src:url("${fontBase}fonts/PPNeueMachina-InktrapRegular.woff2") format("woff2");font-style:normal;font-weight:400;font-display:swap;}
+@font-face{font-family:"PP Neue Machina Inktrap";src:url("${fontBase}fonts/PPNeueMachina-InktrapRegularItalic.woff2") format("woff2");font-style:italic;font-weight:400;font-display:swap;}
+@font-face{font-family:"PP Neue Machina Inktrap";src:url("${fontBase}fonts/PPNeueMachina-InktrapBold.woff2") format("woff2");font-style:normal;font-weight:700;font-display:swap;}
+@font-face{font-family:"PP Neue Machina Inktrap";src:url("${fontBase}fonts/PPNeueMachina-InktrapBoldItalic.woff2") format("woff2");font-style:italic;font-weight:700;font-display:swap;}
+`;
 ---
 
 <!doctype html>
@@ -17,10 +24,15 @@ const { title, description = "Map Your Video blog" } = Astro.props;
     <meta name="description" content={description} />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style is:global set:html={fontFaceCss}></style>
   </head>
-  <body class="bg-white text-zinc-900">
-    <main class="mx-auto max-w-6xl px-6 py-10">
-      <slot />
-    </main>
+  <body class="min-h-screen bg-background text-foreground">
+    <slot />
   </body>
 </html>

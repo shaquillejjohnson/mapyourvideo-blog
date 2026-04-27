@@ -5,6 +5,8 @@ import tailwindcss from '@tailwindcss/vite';
 
 import sanity from '@sanity/astro';
 
+import react from "@astrojs/react";
+
 // https://astro.build/config
 export default defineConfig({
   base: "/blog",
@@ -17,5 +19,5 @@ export default defineConfig({
     dataset: process.env.PUBLIC_SANITY_DATASET || "production",
     useCdn: true,
     apiVersion: "2024-01-01",
-  })]
+  }), react()]
 });
