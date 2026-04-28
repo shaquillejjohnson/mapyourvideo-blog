@@ -38,7 +38,7 @@ const posts = await sanityClient.fetch<BlogPostListItem[]>(BLOG_POSTS_QUERY);
           {posts.map((post) => (
             <li>
               <a
-                href={`${import.meta.env.BASE_URL}${post.slug?.current ?? post._id}/`}
+                href={`/blog/${post.slug?.current}/`}
                 class="group flex h-full flex-col overflow-hidden rounded-xl border border-border bg-card transition-colors hover:border-primary"
               >
                 {post.mainImage && (
