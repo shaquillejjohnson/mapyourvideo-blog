@@ -48,9 +48,10 @@ const description =
   (post.title ? post.title + ". " : "") + "Map Your Video blog.";
 
 function resolveCtaHref(url: string) {
+  if (url.startsWith("#")) return url;
   if (url.startsWith("http")) return url;
   if (url.startsWith("/")) return `${SITE_ORIGIN}${url}`;
-  return `${SITE_ORIGIN}/${url}`;
+  return `${SITE_ORIGIN}${import.meta.env.BASE_URL}${url.replace(/^\.?\//, "")}`;
 }
 ---
 
