@@ -1,34 +1,16 @@
 ---
-import { SITE_ORIGIN, APP_ORIGIN } from "../config/site";
+import { SITE_ORIGIN } from "../config/site";
 
-const base = import.meta.env.BASE_URL;
-const authSignup = `${APP_ORIGIN.replace(/\/$/, "")}/auth?signup=true`;
+const blogHome = import.meta.env.BASE_URL;
 ---
 
-<nav
-  class="fixed top-0 z-50 w-full border-b border-[#222222]/10 backdrop-blur-md"
-  style="background-color: #f5f5f5e6"
->
-  <div class="mx-auto flex max-w-6xl min-w-0 items-center justify-between gap-4 px-4 py-3 sm:px-6 sm:py-4">
-    <a href={SITE_ORIGIN} class="flex shrink-0 items-center" aria-label="Map Your Video home">
-      <img
-        src={`${base}brand/logo-map-your-video-mobile.svg`}
-        alt=""
-        class="h-11 w-auto max-w-[min(100%,16rem)] shrink-0 sm:hidden"
-        aria-hidden="true"
-      />
-      <img
-        src={`${base}brand/logo-may-your-video-desktop.svg`}
-        alt=""
-        class="hidden h-12 w-auto max-w-[min(100%,26rem)] shrink-0 sm:block md:h-14 lg:h-16"
-        aria-hidden="true"
-      />
+<header class="border-b border-border bg-background">
+  <div class="mx-auto flex max-w-[1600px] items-center justify-between px-6 py-5">
+    <a href={SITE_ORIGIN} class="font-display text-lg tracking-tight text-primary hover:opacity-90">
+      Map Your Video
     </a>
-    <a
-      href={authSignup}
-      class="inline-flex min-h-[44px] shrink-0 items-center justify-center rounded-full bg-[#222222] px-4 py-2 text-center font-body text-xs font-medium text-[#f5f5f6] transition-colors hover:bg-[#333333] active:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:min-h-0 sm:px-6 sm:py-2.5 sm:text-sm"
-    >
-      Map your first video free
-    </a>
+    <nav class="flex items-center gap-4">
+      <a href={blogHome} class="font-display text-sm text-muted-foreground hover:text-foreground">Blog</a>
+    </nav>
   </div>
-</nav>
+</header>
