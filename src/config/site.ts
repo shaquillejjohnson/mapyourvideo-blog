@@ -1,17 +1,5 @@
-const trimTrailingSlash = (value: string) => value.replace(/\/+$/, "");
+/** Marketing site (same as story-creator-pro getBaseUrl() for production). */
+export const SITE_ORIGIN = "https://mapyourvideo.com";
 
-/**
- * Canonical site origin used by shared nav/footer links.
- * Override in deploy env with PUBLIC_SITE_ORIGIN for static/preview hosts.
- */
-export const SITE_ORIGIN = trimTrailingSlash(
-  import.meta.env.PUBLIC_SITE_ORIGIN || "https://creatorstoryboard.com"
-);
-
-/**
- * App origin used for authenticated links (signup/dashboard).
- * Defaults to SITE_ORIGIN so standalone static deploys still resolve.
- */
-export const APP_ORIGIN = trimTrailingSlash(
-  import.meta.env.PUBLIC_APP_ORIGIN || SITE_ORIGIN
-);
+/** App subdomain for authenticated routes linked from marketing footer. */
+export const APP_ORIGIN = "https://app.mapyourvideo.com";
